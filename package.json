@@ -1,0 +1,16 @@
+{
+  "name": "ui5-app-gen",
+  "version": "0.0.1",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sungwon Um",
+  "license": "MIT",
+  "description": "",
+  "dependencies": {
+    "express": "^4.21.2",
+    "express-validator": "^7.2.1",
+    "jszip": "^3.10.1"
+  }
+}
