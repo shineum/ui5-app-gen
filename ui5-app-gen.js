@@ -186,11 +186,13 @@ const appFiles = {
 };
 
 class UI5AppGen {
+    static getAppMappings = getAppMappings;
+
     constructor(pAppMapping = null, pRootDir = `${process.cwd()}/dist`) {
         this.appMappings = pAppMapping || getAppMappings();
         this.rootDir = pRootDir;
     }
-
+    
     handleOutput(pZip, pPath, pContent = null) {
         console.log(pPath);
         if (pZip) {
