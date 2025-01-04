@@ -1,0 +1,23 @@
+<!--Opening the ejs tags for including header file-->
+<%- include("./partials/header") %>
+
+<h2>UI5 Initializer</h2><br>
+<form action="/" method="POST">
+    <label>App name: </label>
+    <input type="text" placeholder="demo-app" name="app-name"><br><br>
+    <label>App title: </label>
+    <input type="text" placeholder="Demo App" name="app-title"><br><br>
+    <label>App theme: </label>
+    <input type="text" placeholder="sap_fiori_3" name="app-theme"><br><br>
+    <label>App version: </label>
+    <input type="text" placeholder="0.0.1" name="app-version"><br><br>
+    <label>UI5 minimum version: </label>
+    <input type="text" placeholder="1.121.0" name="ui5-min-version"><br><br>
+    <label>UI5 lib version: </label>
+    <input type="text" placeholder="1.131.1" name="ui5-version"><br><br>
+    <br>
+    <button>Generate</button>
+</form>
+
+<!--Opening the ejs tags for including footer file-->
+<%- include("./partials/footer") %>
