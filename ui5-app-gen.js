@@ -191,60 +191,45 @@ class UI5AppGen {
     constructor(pAppMapping = null, pRootDir = `${process.cwd()}/dist`) {
         this.appMappings = pAppMapping || getAppMappings();
         this.rootDir = pRootDir;
+        this.__initActions();
     }
-    
-    handleOutput(pZip, pPath, pContent = null) {
-        console.log(pPath);
-        if (pZip) {
-            // file
-            if (pContent) {
-                pZip.file(pPath, pContent);
-            }
+
+    __initActions() {
+        this.actionListFolder = [];
+        this.actionListFile = [];
+    }
+
+    __actionAdd(pPath, pContent = null) {
+        if (pContent) {
+            this.actionListFile.push({"fp": pPath, "data": pContent});
         } else {
-            // file
-            if (pContent) {
-                fs.writeFile(pPath, pContent, 'utf8', (err) => { });
-            // folder
-            } else {
-                fs.mkdir(pPath, (err) => { });
-            }
+            this.actionListFolder.push({"fp": pPath});
         }
     }
-
-    traverse(pRootDir = null, pZip = null, pDict = {}, pPathList = []) {
+    
+    __traverse(pDict = {}, pPathList = []) {
         Object.keys(pDict).forEach((pKey) => {
-            let typeStr = typeof (pDict[pKey]);
-            let objPath = path.join(...pPathList, pKey);
-            if (pRootDir) {
-                objPath = path.join(pRootDir, objPath);
-            }
-            // console.log("obj", objPath);
-            if (typeStr == 'object') {
-                this.handleOutput(pZip, objPath);
+            let tTypeStr = typeof (pDict[pKey]);
+            let tObjPath = path.join(...pPathList, pKey);
+            if (tTypeStr == 'object') {
+                this.__actionAdd(tObjPath);
                 pPathList.push(pKey);
-                this.traverse(pRootDir, pZip, pDict[pKey], pPathList);
+                this.__traverse(pDict[pKey], pPathList);
                 pPathList.pop();
-            } else if (typeStr == 'string') {
-                let fileContent = pDict[pKey];
+            } else if (tTypeStr == 'string') {
+                let tFileContent = pDict[pKey];
                 Object.entries(this.appMappings).forEach((pEntry) => {
-                    fileContent = fileContent.replaceAll(`{{${pEntry[0]}}}`, pEntry[1]);
+                    tFileContent = tFileContent.replaceAll(`{{${pEntry[0]}}}`, pEntry[1]);
                 });
-                this.handleOutput(pZip, objPath, fileContent);
+                this.__actionAdd(tObjPath, tFileContent);
             }
         });
-    }    
+    }
 
-    handleInput(pArr, pIdx = 0) {
-        if (pIdx == -1 || pArr.length >= pIdx) {
-            if (this.isZipOutput) {
-                let zip = new JSZip();
-                this.traverse(null, zip, appFiles);
-                const fos = fs.createWriteStream(`${process.cwd()}/${this.appMappings.APP_NAME}.zip`);
-                zip.generateNodeStream({ type: "nodebuffer", streamFiles: true }).pipe(fos);
-            } else {
-                this.handleOutput(null, this.rootDir);
-                this.traverse(this.rootDir, null, appFiles);
-            }
+    __handleInput(pArr, pIdx = 0, pCallback = null) {
+        if (pIdx == -1 || pArr.length <= pIdx) {
+            this.__traverse(appFiles);
+            pCallback && pCallback();
         } else {
             const rl = readline.createInterface({
                 input: process.stdin,
@@ -257,28 +242,64 @@ class UI5AppGen {
                 this.appMappings[pKey] = pInput || pText;
                 console.log(`${pKey}: ${this.appMappings[pKey]}`);
                 rl.close();
-                this.handleInput(pArr, pIdx + 1);
+                this.__handleInput(pArr, pIdx + 1, pCallback);
             });
         }
-    }    
-
-    createProject(pIsZipOutput = false, pWithInput = false) {
-        this.isZipOutput = pIsZipOutput;
-        let mappingKeys = Object.keys(this.appMappings);
-        if (pWithInput) {
-            this.handleInput(mappingKeys);
-        } else {
-            this.handleInput(mappingKeys, -1);
-        }
     }
 
-    createProjectWithInput(pIsZipOutput = false) {
-        this.createProject(pIsZipOutput, true);
+    __setBuffer(pInteracitve = false, pCallback = null) {
+        let tMappingKeys = Object.keys(this.appMappings);
+        this.__initActions();
+        this.__handleInput(tMappingKeys, pInteracitve ? 0 : tMappingKeys.length, pCallback);
     }
 
-    getZipStream() {
-        let zip = new JSZip();
-        return zip.generateNodeStream({type:'nodebuffer', streamFiles:true});
+    __createArtifacts(pRootDir = null) {
+        this.actionListFolder.forEach((pObj) => {
+            let tPath = pRootDir ? path.join(pRootDir, pObj.fp) : pObj.fp;
+            fs.mkdirSync(tPath, {recursive: true}, (err) => { });
+        });
+        this.actionListFile.forEach((pObj) => {
+            let tPath = pRootDir ? path.join(pRootDir, pObj.fp) : pObj.fp;
+            fs.writeFile(tPath, pObj.data, 'utf8', (err) => {});
+        });
+    }
+
+    __createZipArtifacts() {
+        let tZip = new JSZip();
+        this.actionListFile.forEach((pObj) => {
+            tZip.file(pObj.fp, pObj.data);
+        });
+        const fos = fs.createWriteStream(`${process.cwd()}/${this.appMappings.APP_NAME}.zip`);
+        tZip.generateNodeStream({ type: "nodebuffer", streamFiles: true }).pipe(fos);
+    }
+
+    create() {
+        this.__setBuffer(false, () => { this.__createArtifacts(this.rootDir); });
+    }
+
+    createZip() {
+        this.__setBuffer(false, () => { this.__createZipArtifacts(); });
+    }
+
+    createInteractively() {
+        this.__setBuffer(true, () => { this.__createArtifacts(this.rootDir); });
+    }
+
+    createZipInteractively() {
+        this.__setBuffer(true, () => { this.__createZipArtifacts(); });
+    }
+
+    sendZipStream(pRes) {
+        this.__setBuffer(false, () => {
+            let tZip = new JSZip();
+            this.actionListFile.forEach((pObj) => {
+                tZip.file(pObj.fp, pObj.data);
+            });
+            pRes.contentType("application/zip");
+            pRes.type('.zip');
+            pRes.setHeader('Content-Disposition', 'attachment; filename=' + `${this.appMappings.APP_NAME}.zip`);
+            tZip.generateNodeStream({ type: "nodebuffer", streamFiles: true }).pipe(pRes);
+        });
     }
 }
 
