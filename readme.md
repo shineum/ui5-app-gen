@@ -39,3 +39,13 @@ npm start
 #### 2) fill in input fields
 #### 3) click generate button
 #### 4) <<APP_NAME>>.zip file will be downloaded
+
+##
+## 4-3. Create app by web interface (using docker)
+```
+docker compose up -d
+```
+#### 1) open web browser and navigate to http://localhost:3000
+#### 2) fill in input fields
+#### 3) click generate button
+#### 4) <<APP_NAME>>.zip file will be downloaded
