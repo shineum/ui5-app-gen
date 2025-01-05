@@ -11,13 +11,19 @@ git clone https://github.com/shineum/ui5-app-gen.git
 ```
 
 ##
-## 2. Install library
+## 2. Change working dirctory
+```
+cd ui5-app-gen.git
+```
+
+##
+## 3. Install libraries
 ```
 npm install
 ```
 
 ##
-## 3-1. Create app by command
+## 4-1. Create app by command
 ```
 npm run create
 ```
@@ -25,7 +31,7 @@ npm run create
 #### 2) <<APP_NAME>>.zip file will be created
 
 ##
-## 3-2. Create app by web interface
+## 4-2. Create app by web interface
 ```
 npm start
 ```
