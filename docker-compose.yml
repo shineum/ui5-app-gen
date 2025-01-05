@@ -1,0 +1,7 @@
+services:
+  web-app:
+    container_name: ui5appgen
+    image: ui5-app-gen:custom
+    build: .
+    ports:
+      - "3000:3000"
