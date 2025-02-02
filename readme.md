@@ -1,5 +1,7 @@
 # UI5 app initializer
 
+This app will generate UI5 starter project.
+
 ##
 ## 0. Pre-requisite
 node.js 22.12.0 or later
