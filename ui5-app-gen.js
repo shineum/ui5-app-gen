@@ -137,6 +137,8 @@ const FILE_PACKAGE =
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "ui5 serve",
+    "build": "ui5 build",
     "test": "echo \\\"Error: no test specified\\\" && exit 1"
   },
   "author": "",
