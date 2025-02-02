@@ -162,6 +162,26 @@ framework:
       optional: true    
 `;
 
+const FILE_README =
+    `# Quick Start
+
+##
+## 0. Pre-requisite
+install node.js 22.12.0 or later
+
+##
+## 1. Install UI5 module globally
+\`\`\`
+npm install --global @ui5/cli
+\`\`\`
+
+##
+## 2. Start ui5 app
+\`\`\`
+npm start
+\`\`\`
+`;
+
 ////////////////////////////////////
 
 const appFiles = {
@@ -185,6 +205,7 @@ const appFiles = {
     },
     "package.json": FILE_PACKAGE,
     "ui5.yaml": FILE_UI5,
+    "readme.md": FILE_README,
 };
 
 class UI5AppGen {
