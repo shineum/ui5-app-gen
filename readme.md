@@ -13,7 +13,7 @@ git clone https://github.com/shineum/ui5-app-gen.git
 ##
 ## 2. Change working dirctory
 ```
-cd ui5-app-gen.git
+cd ui5-app-gen
 ```
 
 ##
