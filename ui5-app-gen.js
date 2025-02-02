@@ -10,8 +10,8 @@ const getAppMappings = () => {
         "APP_TITLE": "Demo App",
         "APP_THEME": "sap_fiori_3",
         "APP_VERSION": "0.0.1",
-        "UI5_MIN_VERSION": "1.121.0",
-        "UI5_VERSION": "1.131.1"
+        "UI5_MIN_VERSION": "1.120.25",
+        "UI5_VERSION": "1.120.25"
     }
 };
 
