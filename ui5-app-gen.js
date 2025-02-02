@@ -171,7 +171,7 @@ const appFiles = {
             "App.view.xml": FILE_APP_VIEW
         },
         "css": {
-            "style.css": "/* css */"
+            "styles.css": "/* css */"
         },
         "i18n": {
             "i18n_en_US.properties": "#",
