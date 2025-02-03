@@ -182,6 +182,10 @@ npm start
 \`\`\`
 `;
 
+const FILE_GITIGNORE = 
+    `dist
+node_modules`
+
 ////////////////////////////////////
 
 const appFiles = {
@@ -206,6 +210,7 @@ const appFiles = {
     "package.json": FILE_PACKAGE,
     "ui5.yaml": FILE_UI5,
     "readme.md": FILE_README,
+    ".gitignore": FILE_GITIGNORE,
 };
 
 class UI5AppGen {
